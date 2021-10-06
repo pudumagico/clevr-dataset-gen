@@ -1,0 +1,5 @@
+hasColor(1,blue), hasTexture(1,metal), hasShape(1,cylinder), hasSize(1,large)
+hasColor(2,green), hasTexture(2,rubber), hasShape(2,cylinder), hasSize(2,large)
+hasColor(3,yellow), hasShape(3,cylinder), hasTexture(3,metal), hasSize(3,large)
+hasColor(4,purple), hasTexture(4,rubber), hasShape(4,cube), hasSize(4,large)
+hasColor(5,yellow), hasTexture(5,metal), hasShape(5,cube), hasSize(5,large)

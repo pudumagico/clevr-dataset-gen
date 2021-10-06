@@ -33,7 +33,7 @@ if INSIDE_BLENDER:
     import utils
   except ImportError as e:
     print("\nERROR")
-    print("Running render_images.py from Blender and cannot import utils.py.") 
+    print("Running render_images.py from Blender and cannot import utils.py.")
     print("You may need to add a .pth file to the site-packages of Blender's")
     print("bundled python with a command like this:\n")
     print("echo $PWD >> $BLENDER/$VERSION/python/lib/python3.5/site-packages/clevr.pth")
@@ -70,7 +70,7 @@ parser.add_argument('--max_objects', default=10, type=int,
     help="The maximum number of objects to place in each scene")
 parser.add_argument('--min_dist', default=0.25, type=float,
     help="The minimum allowed distance between object centers")
-parser.add_argument('--margin', default=0.4, type=float,
+parser.add_argument('--margin', default=0.1, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
          "objects will be at least this distance apart. This makes resolving " +
          "spatial relationships slightly less ambiguous.")
@@ -168,7 +168,7 @@ def main(args):
     os.makedirs(args.output_scene_dir)
   if args.save_blendfiles == 1 and not os.path.isdir(args.output_blend_dir):
     os.makedirs(args.output_blend_dir)
-  
+
   all_scene_paths = []
   for i in range(args.num_images):
     img_path = img_template % (i + args.start_idx)
@@ -275,6 +275,9 @@ def render_scene(args,
   # Figure out the left, up, and behind directions along the plane and record
   # them in the scene structure
   camera = bpy.data.objects['Camera']
+  print('camera__location', camera.location)
+  camera.location = (0, 0, 15)
+  camera.rotation_euler = (0, 0, 0)
   plane_normal = plane.data.vertices[0].normal
   cam_behind = camera.matrix_world.to_quaternion() * Vector((0, 0, -1))
   cam_left = camera.matrix_world.to_quaternion() * Vector((-1, 0, 0))
@@ -350,6 +353,15 @@ def add_random_objects(scene_struct, num_objects, args, camera):
   positions = []
   objects = []
   blender_objects = []
+  # pairs = [(-3,-3), (0,-3), (3,-3), (-3,0), (0,0), (3,0), (-3,3), (0,3), (3,3)]
+
+  '''
+  hasColor(1,blue), hasTexture(1,metal), hasShape(1,cylinder), hasSize(1,large)
+  hasColor(2,green), hasTexture(2,rubber), hasShape(2,cylinder), hasSize(2,large)
+  hasColor(3,yellow), hasShape(3,cylinder), hasTexture(3,metal), hasSize(3,large)
+  hasColor(4,purple), hasTexture(4,rubber)  hasShape(4,square), hasSize(4,large)
+  hasColor(5,yellow), hasTexture(5,metal), hasShape(5,square), hasSize(5,large)
+  '''
   for i in range(num_objects):
     # Choose a random size
     size_name, r = random.choice(size_mapping)
@@ -358,6 +370,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
     # objects and that we are more than the desired margin away from all existing
     # objects along all cardinal directions.
     num_tries = 0
+    # y = -4
     while True:
       # If we try and fail to place an object too many times, then delete all
       # the objects in the scene and start over.
@@ -366,8 +379,14 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         for obj in blender_objects:
           utils.delete_object(obj)
         return add_random_objects(scene_struct, num_objects, args, camera)
-      x = random.uniform(-3, 3)
-      y = random.uniform(-3, 3)
+      # x = random.uniform(-3, 3)
+      # y = random.uniform(-3, 3)
+      # x,y=pairs[i]
+      x = -4 + i*2
+      y = 0
+      print(x,y)
+
+
       # Check to make sure the new object is further than min_dist from all
       # other objects, and further than margin along the four cardinal directions
       dists_good = True
@@ -393,6 +412,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
       if dists_good and margins_good:
         break
 
+
     # Choose random color and shape
     if shape_color_combos is None:
       obj_name, obj_name_out = random.choice(object_mapping)
@@ -403,6 +423,35 @@ def add_random_objects(scene_struct, num_objects, args, camera):
       obj_name = [k for k, v in object_mapping if v == obj_name_out][0]
       rgba = color_name_to_rgba[color_name]
 
+
+    
+    if i == 0:
+          color_name = "blue"
+          obj_name ='SmoothCylinder'
+          mat_name, mat_name_out =     "rubber", "Rubber"
+    elif i ==1:
+          color_name ='green'
+          obj_name ='SmoothCylinder'
+          mat_name, mat_name_out =         "rubber", "Rubber",
+    elif i ==2:
+          color_name ='yellow'
+          obj_name = 'SmoothCylinder'
+          mat_name, mat_name_out =     "metal", "MyMetal"
+
+
+    elif i ==3:
+          color_name ='purple'
+          obj_name ='SmoothCube_v2'
+          mat_name, mat_name_out =         "rubber", "Rubber",
+
+
+
+    elif i ==4:
+          color_name ='yellow'
+          obj_name ='SmoothCube_v2'
+          mat_name, mat_name_out =     "metal", "MyMetal"
+
+    rgba = color_name_to_rgba[color_name]
     # For cube, adjust the size a bit
     if obj_name == 'Cube':
       r /= math.sqrt(2)
@@ -416,9 +465,28 @@ def add_random_objects(scene_struct, num_objects, args, camera):
     blender_objects.append(obj)
     positions.append((x, y, r))
 
+
     # Attach a random material
     mat_name, mat_name_out = random.choice(material_mapping)
+    print(mat_name, mat_name_out)
+    if i == 0:
+          mat_name, mat_name_out =     "MyMetal", "metal"
+    elif i ==1:
+          mat_name, mat_name_out =     "Rubber", "rubber" 
+    elif i ==2:
+          mat_name, mat_name_out =     "MyMetal", "metal"
+
+
+    elif i ==3:
+          mat_name, mat_name_out =     "Rubber", "rubber" 
+
+    elif i ==4:
+          mat_name, mat_name_out =     "MyMetal", "metal"
+
     utils.add_material(mat_name, Color=rgba)
+
+
+
 
     # Record data about the object in the scene data structure
     pixel_coords = utils.get_camera_coords(camera, obj.location)
@@ -431,6 +499,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
       'pixel_coords': pixel_coords,
       'color': color_name,
     })
+
 
   # Check that all objects are at least partially visible in the rendered image
   all_visible = check_visibility(blender_objects, args.min_pixels_per_object)
@@ -448,7 +517,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
 def compute_all_relationships(scene_struct, eps=0.2):
   """
   Computes relationships between all pairs of objects in the scene.
-  
+
   Returns a dictionary mapping string relationship names to lists of lists of
   integers, where output[rel][i] gives a list of object indices that have the
   relationship rel with object i. For example if j is in output['left'][i] then
@@ -577,4 +646,3 @@ if __name__ == '__main__':
     print('arguments like this:')
     print()
     print('python render_images.py --help')
-
