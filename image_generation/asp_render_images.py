@@ -161,8 +161,20 @@ parser.add_argument('--render_tile_size', default=256, type=int,
                     "while larger tile sizes may be optimal for GPU-based rendering.")
 
 # ASP options
-parser.add_argument('--asp_models_folder', default=None,
-                    help="ASP models folder to be rendered.")
+parser.add_argument('--model_files_folder', default=None,
+                    help="Folder where the produced models are stored.")
+# parser.add_argument('--num_negative_examples', default=None,
+#                     help="Number of negative examples per positive example.")
+
+# def produce_positive_model(ctl, asp_program):
+#     ctl.load(asp_program)
+#     ctl.ground([("base", [])])
+#     x = ctl.solve()
+#     print(x)
+#     pass
+
+# def produce_negative_model(asp_program, base_model):
+#     pass
 
 
 def main(args):
@@ -182,8 +194,11 @@ def main(args):
     if args.save_blendfiles == 1 and not os.path.isdir(args.output_blend_dir):
         os.makedirs(args.output_blend_dir)
 
+    # ctl = clingo.Control()
+    # produce_positive_model(ctl, args.asp_program)
+
     instances = []
-    for instance in os.scandir(args.asp_models_folder):
+    for instance in os.scandir(args.model_files_folder):
         if instance.path.endswith('.lp'):
             with open(instance.path, 'r') as file:
                 instances.append(file.read().replace(
@@ -295,7 +310,6 @@ def render_scene(args,
     # Figure out the left, up, and behind directions along the plane and record
     # them in the scene structure
     camera = bpy.data.objects['Camera']
-    print('camera__location', camera.location)
     camera.location = (0, 0, 15)
     camera.rotation_euler = (0, 0, 0)
     plane_normal = plane.data.vertices[0].normal
@@ -356,216 +370,148 @@ def render_scene(args,
 
 
 def add_objects(scene_struct, args, camera, asp_model):
-  """
-  Add random objects to the current blender scene
-  """
+    """
+    Add random objects to the current blender scene
+    """
 
-  # asp_model = asp_model.split(' ')
-  print(asp_model)
-  match = re.findall(r'\d', asp_model)
-  print(set(match))
+    # asp_model = asp_model.split(' ')
+    print(asp_model)
+    match = re.findall(r'\d', asp_model)
+    print(set(match))
 
-  objects_dict = {}
-  asp_model = asp_model.split(' ')
-  for number in set(match):
-      if number not in objects_dict:
+    objects_dict = {}
+    asp_model = asp_model.split(' ')
+    for number in set(match):
+        if number not in objects_dict:
             objects_dict[number] = []
 
-      for predicate in asp_model:
-          if number in predicate:
+        for predicate in asp_model:
+            if number in predicate:
                 objects_dict[number].append(predicate)
-  print(objects_dict, len(objects_dict))
-  # Load the property file
-  with open(args.properties_json, 'r') as f:
-      properties = json.load(f)
-      color_name_to_rgba = {}
-      for name, rgb in properties['colors'].items():
-          rgba = [float(c) / 255.0 for c in rgb] + [1.0]
-          color_name_to_rgba[name] = rgba
-      material_mapping = [(v, k) for k, v in properties['materials'].items()]
-      object_mapping = [(v, k) for k, v in properties['shapes'].items()]
-      size_mapping = list(properties['sizes'].items())
 
-  shape_color_combos = None
-  if args.shape_color_combos_json is not None:
-      with open(args.shape_color_combos_json, 'r') as f:
-          shape_color_combos = list(json.load(f).items())
+    print(objects_dict, len(objects_dict))
+    # Load the property file
+    with open(args.properties_json, 'r') as f:
+        properties = json.load(f)
+        color_name_to_rgba = {}
+        for name, rgb in properties['colors'].items():
+            rgba = [float(c) / 255.0 for c in rgb] + [1.0]
+            color_name_to_rgba[name] = rgba
+        material_mapping = [(v, k) for k, v in properties['materials'].items()]
+        object_mapping = [(v, k) for k, v in properties['shapes'].items()]
+        size_mapping = list(properties['sizes'].items())
 
-  positions = []
-  objects = []
-  blender_objects = []
+    shape_color_combos = None
+    if args.shape_color_combos_json is not None:
+        with open(args.shape_color_combos_json, 'r') as f:
+            shape_color_combos = list(json.load(f).items())
 
-  '''
-  hasColor(1,blue), hasTexture(1,metal), hasShape(1,cylinder), hasSize(1,large)
-  hasColor(2,green), hasTexture(2,rubber), hasShape(2,cylinder), hasSize(2,large)
-  hasColor(3,yellow), hasShape(3,cylinder), hasTexture(3,metal), hasSize(3,large)
-  hasColor(4,purple), hasTexture(4,rubber)  hasShape(4,square), hasSize(4,large)
-  hasColor(5,yellow), hasTexture(5,metal), hasShape(5,square), hasSize(5,large)
-  '''
-  print('hola')
+    positions = []
+    objects = []
+    blender_objects = []
 
-  for key in objects_dict:
-    i = int(key) - 1
-    print(i)
+    for key in objects_dict:
+        i = int(key) - 1
+        print(i)
 
-    for predicate in objects_dict[key]:
-      if 'hasColor' in predicate:
-        color_name = predicate.split(',')[1].strip(')')
-        rgba = color_name_to_rgba[color_name]
-      elif 'hasShape' in predicate:
-        obj_name_out = predicate.split(',')[1].strip(')')
-        obj_name = properties['shapes'][obj_name_out]
-      elif 'hasTexture' in predicate:
-        mat_name_out = predicate.split(',')[1].strip(')')
-        mat_name = properties['materials'][mat_name_out]
-      elif 'hasSize' in predicate:
-        size_name = predicate.split(',')[1].strip(')')
-        r = properties['sizes'][size_name]
-    # Choose a random size
-    # size_name, r = random.choice(size_mapping)
+        for predicate in objects_dict[key]:
+            if 'hasColor' in predicate:
+                color_name = predicate.split(',')[1].strip(')')
+                rgba = color_name_to_rgba[color_name]
+            elif 'hasShape' in predicate:
+                obj_name_out = predicate.split(',')[1].strip(')')
+                obj_name = properties['shapes'][obj_name_out]
+            elif 'hasTexture' in predicate:
+                mat_name_out = predicate.split(',')[1].strip(')')
+                mat_name = properties['materials'][mat_name_out]
+            elif 'hasSize' in predicate:
+                size_name = predicate.split(',')[1].strip(')')
+                r = properties['sizes'][size_name]
+        # Choose a random size
+        # size_name, r = random.choice(size_mapping)
 
-    # Try to place the object, ensuring that we don't intersect any existing
-    # objects and that we are more than the desired margin away from all existing
-    # objects along all cardinal directions.
-    num_tries = 0
-    # y = -4
-    while True:
-      # # If we try and fail to place an object too many times, then delete all
-      # # the objects in the scene and start over.
-      # num_tries += 1
-      # if num_tries > args.max_retries:
-      #   for obj in blender_objects:
-      #     utils.delete_object(obj)
-      #   return add_random_objects(scene_struct, num_objects, args, camera)
-      # x = random.uniform(-3, 3)
-      # y = random.uniform(-3, 3)
-      # x,y=pairs[i]
-      x = -4 + i*2
-      y = 0
-      print(x,y)
+        # Try to place the object, ensuring that we don't intersect any existing
+        # objects and that we are more than the desired margin away from all existing
+        # objects along all cardinal directions.
+        num_tries = 0
+        # y = -4
+        while True:
+            # # If we try and fail to place an object too many times, then delete all
+            # # the objects in the scene and start over.
+            # num_tries += 1
+            # if num_tries > args.max_retries:
+            #   for obj in blender_objects:
+            #     utils.delete_object(obj)
+            #   return add_random_objects(scene_struct, num_objects, args, camera)
+            # x = random.uniform(-3, 3)
+            # y = random.uniform(-3, 3)
+            # x,y=pairs[i]
+            x = -4 + i*2
+            y = 0
+            print(x, y)
 
+            # Check to make sure the new object is further than min_dist from all
+            # other objects, and further than margin along the four cardinal directions
+            dists_good = True
+            margins_good = True
+            for (xx, yy, rr) in positions:
+                dx, dy = x - xx, y - yy
+                dist = math.sqrt(dx * dx + dy * dy)
+                if dist - r - rr < args.min_dist:
+                    dists_good = False
+                    break
+                for direction_name in ['left', 'right', 'front', 'behind']:
+                    direction_vec = scene_struct['directions'][direction_name]
+                    assert direction_vec[2] == 0
+                    margin = dx * direction_vec[0] + dy * direction_vec[1]
+                    if 0 < margin < args.margin:
+                        print(margin, args.margin, direction_name)
+                        print('BROKEN MARGIN!')
+                        margins_good = False
+                        break
+                if not margins_good:
+                    break
 
-      # Check to make sure the new object is further than min_dist from all
-      # other objects, and further than margin along the four cardinal directions
-      dists_good = True
-      margins_good = True
-      for (xx, yy, rr) in positions:
-        dx, dy = x - xx, y - yy
-        dist = math.sqrt(dx * dx + dy * dy)
-        if dist - r - rr < args.min_dist:
-          dists_good = False
-          break
-        for direction_name in ['left', 'right', 'front', 'behind']:
-          direction_vec = scene_struct['directions'][direction_name]
-          assert direction_vec[2] == 0
-          margin = dx * direction_vec[0] + dy * direction_vec[1]
-          if 0 < margin < args.margin:
-            print(margin, args.margin, direction_name)
-            print('BROKEN MARGIN!')
-            margins_good = False
-            break
-        if not margins_good:
-          break
+            if dists_good and margins_good:
+                break
 
-      if dists_good and margins_good:
-        break
+        if obj_name == 'Cube':
+            r /= math.sqrt(2)
 
-    # Choose random color and shape
-    # if shape_color_combos is None:
-    #     obj_name, obj_name_out = random.choice(object_mapping)
-    #     color_name, rgba = random.choice(list(color_name_to_rgba.items()))
-    # else:
-    #     obj_name_out, color_choices = random.choice(shape_color_combos)
-    #     color_name = random.choice(color_choices)
-    #     obj_name = [k for k, v in object_mapping if v == obj_name_out][0]
-    #     rgba = color_name_to_rgba[color_name]
+        # Choose random orientation for the object.
+        theta = 360.0 * random.random()
 
+        # Actually add the object to the scene
+        utils.add_object(args.shape_dir, obj_name, r, (x, y), theta=theta)
+        obj = bpy.context.object
+        blender_objects.append(obj)
+        positions.append((x, y, r))
 
+        utils.add_material(mat_name, Color=rgba)
 
-    print(obj_name)
-    # color_name = objects_dict[key][1].split(',').strip(')')
-    # color_name = objects_dict[key][2].split(',').strip(')')
-    # color_name = objects_dict[key][0].split(',').strip(')')
-    print(color_name)
+        # Record data about the object in the scene data structure
+        pixel_coords = utils.get_camera_coords(camera, obj.location)
+        objects.append({
+            'shape': obj_name_out,
+            'size': size_name,
+            'material': mat_name_out,
+            '3d_coords': tuple(obj.location),
+            'rotation': theta,
+            'pixel_coords': pixel_coords,
+            'color': color_name,
+        })
 
-    # if i == 0:
-    #     color_name = "blue"
-    #     obj_name = 'SmoothCylinder'
-    #     mat_name, mat_name_out = "rubber", "Rubber"
-    # elif i == 1:
-    #     color_name = 'green'
-    #     obj_name = 'SmoothCylinder'
-    #     mat_name, mat_name_out = "rubber", "Rubber",
-    # elif i == 2:
-    #     color_name = 'yellow'
-    #     obj_name = 'SmoothCylinder'
-    #     mat_name, mat_name_out = "metal", "MyMetal"
+    # Check that all objects are at least partially visible in the rendered image
+    # all_visible = check_visibility(blender_objects, args.min_pixels_per_object)
+    # if not all_visible:
+    #     # If any of the objects are fully occluded then start over; delete all
+    #     # objects from the scene and place them all again.
+    #     print('Some objects are occluded; replacing objects')
+    #     for obj in blender_objects:
+    #         utils.delete_object(obj)
+    #     return add_random_objects(scene_struct, num_objects, args, camera)
 
-    # elif i == 3:
-    #     color_name = 'purple'
-    #     obj_name = 'SmoothCube_v2'
-    #     mat_name, mat_name_out = "rubber", "Rubber",
-
-    # elif i == 4:
-    #     color_name = 'yellow'
-    #     obj_name = 'SmoothCube_v2'
-    #     mat_name, mat_name_out = "metal", "MyMetal"
-
-    # rgba = color_name_to_rgba[color_name]
-    # For cube, adjust the size a bit
-    if obj_name == 'Cube':
-        r /= math.sqrt(2)
-
-    # Choose random orientation for the object.
-    theta = 360.0 * random.random()
-
-    # Actually add the object to the scene
-    utils.add_object(args.shape_dir, obj_name, r, (x, y), theta=theta)
-    obj = bpy.context.object
-    blender_objects.append(obj)
-    positions.append((x, y, r))
-
-    # Attach a random material
-    # mat_name, mat_name_out = random.choice(material_mapping)
-    # print(mat_name, mat_name_out)
-    # if i == 0:
-    #     mat_name, mat_name_out = "MyMetal", "metal"
-    # elif i == 1:
-    #     mat_name, mat_name_out = "Rubber", "rubber"
-    # elif i == 2:
-    #     mat_name, mat_name_out = "MyMetal", "metal"
-
-    # elif i == 3:
-    #     mat_name, mat_name_out = "Rubber", "rubber"
-
-    # elif i == 4:
-    #     mat_name, mat_name_out = "MyMetal", "metal"
-
-    utils.add_material(mat_name, Color=rgba)
-
-    # Record data about the object in the scene data structure
-    pixel_coords = utils.get_camera_coords(camera, obj.location)
-    objects.append({
-        'shape': obj_name_out,
-        'size': size_name,
-        'material': mat_name_out,
-        '3d_coords': tuple(obj.location),
-        'rotation': theta,
-        'pixel_coords': pixel_coords,
-        'color': color_name,
-    })
-
-  # Check that all objects are at least partially visible in the rendered image
-  # all_visible = check_visibility(blender_objects, args.min_pixels_per_object)
-  # if not all_visible:
-  #     # If any of the objects are fully occluded then start over; delete all
-  #     # objects from the scene and place them all again.
-  #     print('Some objects are occluded; replacing objects')
-  #     for obj in blender_objects:
-  #         utils.delete_object(obj)
-  #     return add_random_objects(scene_struct, num_objects, args, camera)
-
-  return objects, blender_objects
+    return objects, blender_objects
 
 
 def compute_all_relationships(scene_struct, eps=0.2):
