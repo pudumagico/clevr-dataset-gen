@@ -179,13 +179,7 @@ parser.add_argument('--model_files_folder', default=None,
 
 def main(args):
     num_digits = 6
-    prefix = '%s_%s_' % (args.filename_prefix, args.split)
-    img_template = '%s%%0%dd.png' % (prefix, num_digits)
-    scene_template = '%s%%0%dd.json' % (prefix, num_digits)
-    blend_template = '%s%%0%dd.blend' % (prefix, num_digits)
-    img_template = os.path.join(args.output_image_dir, img_template)
-    scene_template = os.path.join(args.output_scene_dir, scene_template)
-    blend_template = os.path.join(args.output_blend_dir, blend_template)
+
 
     if not os.path.isdir(args.output_image_dir):
         os.makedirs(args.output_image_dir)
@@ -197,16 +191,28 @@ def main(args):
     # ctl = clingo.Control()
     # produce_positive_model(ctl, args.asp_program)
 
-    instances = []
+    instances = {}
     for instance in os.scandir(args.model_files_folder):
         if instance.path.endswith('.lp'):
             with open(instance.path, 'r') as file:
-                instances.append(file.read().replace(
-                    '\n', ' ').replace(', ', ' '))
+                instances[instance.path] = file.read().replace(
+                    '\n', ' ').replace(', ', ' ')
 
-    print(instances)
     all_scene_paths = []
-    for i in range(len(instances)):
+    for key in instances:
+        if 'positive' in key:
+            prefix = 'positive'
+        else:
+            prefix = 'negative'        
+        i = int(re.search(r'\d+', key).group())
+
+        img_template = '%s%%0%dd.png' % (prefix, num_digits)
+        scene_template = '%s%%0%dd.json' % (prefix, num_digits)
+        blend_template = '%s%%0%dd.blend' % (prefix, num_digits)
+        img_template = os.path.join(args.output_image_dir, img_template)
+        scene_template = os.path.join(args.output_scene_dir, scene_template)
+        blend_template = os.path.join(args.output_blend_dir, blend_template)
+        
         img_path = img_template % (i + args.start_idx)
         scene_path = scene_template % (i + args.start_idx)
         all_scene_paths.append(scene_path)
@@ -215,7 +221,7 @@ def main(args):
             blend_path = blend_template % (i + args.start_idx)
         # num_objects = random.randint(args.min_objects, args.max_objects)
         render_scene(args,
-                     asp_model=instances[i],
+                     asp_model=instances[key],
                      output_index=(i + args.start_idx),
                      output_split=args.split,
                      output_image=img_path,
@@ -311,7 +317,7 @@ def render_scene(args,
     # them in the scene structure
     camera = bpy.data.objects['Camera']
     camera.location = (0, 0, 15)
-    camera.rotation_euler = (0, 0, 0)
+    # camera.rotation_euler = (0, 0, 0)
     plane_normal = plane.data.vertices[0].normal
     cam_behind = camera.matrix_world.to_quaternion() * Vector((0, 0, -1))
     cam_left = camera.matrix_world.to_quaternion() * Vector((-1, 0, 0))
@@ -375,9 +381,10 @@ def add_objects(scene_struct, args, camera, asp_model):
     """
 
     # asp_model = asp_model.split(' ')
-    print(asp_model)
     match = re.findall(r'\d', asp_model)
-    print(set(match))
+    n_objects = int(max(match))
+    distance_factor = 2 
+    min_pos = (n_objects - 1)*distance_factor/2
 
     objects_dict = {}
     asp_model = asp_model.split(' ')
@@ -389,7 +396,6 @@ def add_objects(scene_struct, args, camera, asp_model):
             if number in predicate:
                 objects_dict[number].append(predicate)
 
-    print(objects_dict, len(objects_dict))
     # Load the property file
     with open(args.properties_json, 'r') as f:
         properties = json.load(f)
@@ -411,9 +417,8 @@ def add_objects(scene_struct, args, camera, asp_model):
     blender_objects = []
 
     for key in objects_dict:
+        print(objects_dict[key])
         i = int(key) - 1
-        print(i)
-
         for predicate in objects_dict[key]:
             if 'hasColor' in predicate:
                 color_name = predicate.split(',')[1].strip(')')
@@ -433,8 +438,6 @@ def add_objects(scene_struct, args, camera, asp_model):
         # Try to place the object, ensuring that we don't intersect any existing
         # objects and that we are more than the desired margin away from all existing
         # objects along all cardinal directions.
-        num_tries = 0
-        # y = -4
         while True:
             # # If we try and fail to place an object too many times, then delete all
             # # the objects in the scene and start over.
@@ -446,9 +449,8 @@ def add_objects(scene_struct, args, camera, asp_model):
             # x = random.uniform(-3, 3)
             # y = random.uniform(-3, 3)
             # x,y=pairs[i]
-            x = -4 + i*2
+            x = -min_pos + i*distance_factor
             y = 0
-            print(x, y)
 
             # Check to make sure the new object is further than min_dist from all
             # other objects, and further than margin along the four cardinal directions

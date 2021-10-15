@@ -1,49 +1,11 @@
-clingo version 5.4.0
+clingo version 5.5.1
 Reading from clevr.lp
 Solving...
 Answer: 1
 hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(2,cube) hasShape(3,cube) hasShape(4,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 2
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(2,cube) hasShape(3,cube) hasShape(4,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 3
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(2,cube) hasShape(3,cube) hasShape(4,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 4
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(2,cube) hasShape(3,cube) hasShape(4,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 5
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(4,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(2,cube) hasShape(3,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 6
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(4,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(2,cube) hasShape(3,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 7
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(4,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(2,cube) hasShape(3,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 8
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(4,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(2,cube) hasShape(3,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 9
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(2,cylinder) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(3,cube) hasShape(4,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 10
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(2,cylinder) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(3,cube) hasShape(4,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 11
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(2,cylinder) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(3,cube) hasShape(4,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 12
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(2,cylinder) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(3,cube) hasShape(4,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 13
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(2,cylinder) hasShape(4,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(3,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 14
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(2,cylinder) hasShape(4,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(3,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 15
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(2,cylinder) hasShape(4,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(3,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 16
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(2,cylinder) hasShape(4,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(3,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 17
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(3,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(2,cube) hasShape(4,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 18
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(3,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cylinder) hasShape(2,cube) hasShape(4,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 19
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(3,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(2,cube) hasShape(4,cube) hasShape(5,sphere) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
-Answer: 20
-hasColor(1,cyan) hasColor(2,blue) hasColor(3,purple) outHasColor(5,blue) hasColor(4,blue) hasColor(5,cyan) hasShape(3,sphere) outHasSize(5,large) outHasTexture(5,rubber) outHasShape(5,sphere) hasShape(1,cube) hasShape(2,cube) hasShape(4,cube) hasShape(5,cube) hasSize(1,large) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,rubber) hasTexture(5,rubber)
 SATISFIABLE
 
-Models       : 20+
+Models       : 1+
 Calls        : 1
-Time         : 0.004s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
-CPU Time     : 0.004s
+Time         : 0.003s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.003s
