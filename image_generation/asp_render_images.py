@@ -145,7 +145,8 @@ parser.add_argument('--fill_light_jitter', default=1.0, type=float,
                     help="The magnitude of random jitter to add to the fill light position.")
 parser.add_argument('--back_light_jitter', default=1.0, type=float,
                     help="The magnitude of random jitter to add to the back light position.")
-parser.add_argument('--camera_jitter', default=0.5, type=float,
+# parser.add_argument('--camera_jitter', default=0.5, type=float,
+parser.add_argument('--camera_jitter', default=0, type=float,
                     help="The magnitude of random jitter to add to the camera position")
 parser.add_argument('--render_num_samples', default=512, type=int,
                     help="The number of samples to use when rendering. Larger values will " +
@@ -159,27 +160,24 @@ parser.add_argument('--render_tile_size', default=256, type=int,
                     "quality of the rendered image but may affect the speed; CPU-based " +
                     "rendering may achieve better performance using smaller tile sizes " +
                     "while larger tile sizes may be optimal for GPU-based rendering.")
+parser.add_argument('--camera_position', nargs="+", type=int, default=(7.4811, -6.5076, 5.3437),
+                    help="phi,theta,Z numbers that describe the POLAR position of the camera")
+# parser.add_argument('--camera_rotation', nargs="+", type=int,
+#                     help="X,Y,Z numbers that describe the rotation of the camera")
 
 # ASP options
 parser.add_argument('--model_files_folder', default=None,
                     help="Folder where the produced models are stored.")
+parser.add_argument('--missing_objects', default=0, type=int,
+                    help="How many positions to be left in blank.")
+
+
 # parser.add_argument('--num_negative_examples', default=None,
 #                     help="Number of negative examples per positive example.")
-
-# def produce_positive_model(ctl, asp_program):
-#     ctl.load(asp_program)
-#     ctl.ground([("base", [])])
-#     x = ctl.solve()
-#     print(x)
-#     pass
-
-# def produce_negative_model(asp_program, base_model):
-#     pass
 
 
 def main(args):
     num_digits = 6
-
 
     if not os.path.isdir(args.output_image_dir):
         os.makedirs(args.output_image_dir)
@@ -190,6 +188,7 @@ def main(args):
 
     # ctl = clingo.Control()
     # produce_positive_model(ctl, args.asp_program)
+    open("out_objects.txt", "w").close()
 
     instances = {}
     for instance in os.scandir(args.model_files_folder):
@@ -313,11 +312,17 @@ def render_scene(args,
         for i in range(3):
             bpy.data.objects['Camera'].location[i] += rand(args.camera_jitter)
 
+    
+    print(bpy.data.objects['Camera'].location)
+
     # Figure out the left, up, and behind directions along the plane and record
     # them in the scene structure
     camera = bpy.data.objects['Camera']
-    camera.location = (0, 0, 15)
-    # camera.rotation_euler = (0, 0, 0)
+    camera.location = (args.camera_position)
+    # camera.location = (0, 0, 15)
+
+    # print("camera.rotation_euler", camera.rotation_euler)
+
     plane_normal = plane.data.vertices[0].normal
     cam_behind = camera.matrix_world.to_quaternion() * Vector((0, 0, -1))
     cam_left = camera.matrix_world.to_quaternion() * Vector((-1, 0, 0))
@@ -380,6 +385,7 @@ def add_objects(scene_struct, args, camera, asp_model):
     Add random objects to the current blender scene
     """
 
+    print(asp_model)
     # asp_model = asp_model.split(' ')
     match = re.findall(r'\d', asp_model)
     n_objects = int(max(match))
@@ -395,7 +401,14 @@ def add_objects(scene_struct, args, camera, asp_model):
         for predicate in asp_model:
             if number in predicate:
                 objects_dict[number].append(predicate)
-
+    
+    
+    out_objects = random.sample(list(objects_dict), args.missing_objects)
+    out_dict = {}
+    for i in out_objects:
+        out_dict[i] = objects_dict[i]
+        del objects_dict[i]
+        
     # Load the property file
     with open(args.properties_json, 'r') as f:
         properties = json.load(f)
@@ -512,6 +525,11 @@ def add_objects(scene_struct, args, camera, asp_model):
     #     for obj in blender_objects:
     #         utils.delete_object(obj)
     #     return add_random_objects(scene_struct, num_objects, args, camera)
+
+    if out_dict:
+        with open('out_objects.txt', 'a') as file:
+            file.write(json.dumps(out_dict)) # use `json.loads` to do the reverse
+            file.write('\n') # use `json.loads` to do the reverse
 
     return objects, blender_objects
 
