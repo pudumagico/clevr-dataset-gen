@@ -1,0 +1,1 @@
+hasColor(1,green) hasColor(2,blue) hasColor(3,purple) hasColor(4,blue) hasColor(5,cyan) hasShape(3,cylinder) hasShape(5,cylinder) hasShape(1,cube) hasShape(2,cube) hasShape(4,cube) hasSize(1,small) hasSize(2,small) hasSize(3,large) hasSize(4,large) hasSize(5,large) hasTexture(1,metal) hasTexture(2,metal) hasTexture(3,metal) hasTexture(4,metal) hasTexture(5,metal)

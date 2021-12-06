@@ -253,6 +253,14 @@
       "output": "Bool",
       "terminal": false,
       "template_only": true
+    },
+    {
+      "name": "relate_filter_multiple",
+      "inputs": ["ObjectSet"],
+      "side_inputs": ["Relation", "Size", "Color", "Material", "Shape"],
+      "output": "ObjectSet",
+      "terminal": false,
+      "template_only": true
     }
   ]
 }

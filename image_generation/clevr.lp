@@ -1,17 +1,17 @@
 % shapes
 shape(cube).
 shape(cylinder).
-shape(sphere).
+% shape(sphere).
 
 % colors
 color(gray).
 color(blue).
 color(brown).
-color(yellow).
-color(red).
-color(green).
-color(purple).
-color(cyan).
+% color(yellow).
+% color(red).
+% color(green).
+% color(purple).
+% color(cyan).
 
 % textures
 texture(rubber).

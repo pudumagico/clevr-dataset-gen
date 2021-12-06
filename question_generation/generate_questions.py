@@ -173,6 +173,11 @@ def find_relate_filter_options(object_idx, scene_struct, metadata,
   # is empty or where the intersection is equal to the filtering output.
   trivial_options = {}
   for relationship in scene_struct['relationships']:
+    
+    # print(set(scene_struct['relationships'][relationship][object_idx]))
+    print(object_idx)
+    print(scene_struct['relationships'][relationship])
+    print('hola')
     related = set(scene_struct['relationships'][relationship][object_idx])
     for filters, filtered in scene_struct['_filter_options'].items():
       intersection = related & filtered
@@ -183,6 +188,44 @@ def find_relate_filter_options(object_idx, scene_struct, metadata,
         trivial_options[(relationship, filters)] = sorted(list(intersection))
       else:
         options[(relationship, filters)] = sorted(list(intersection))
+
+  N, f = len(options), trivial_frac
+  num_trivial = int(round(N * f / (1 - f)))
+  trivial_options = list(trivial_options.items())
+  random.shuffle(trivial_options)
+  for k, v in trivial_options[:num_trivial]:
+    options[k] = v
+
+  return options
+
+def find_relate_filter_multiple_options(object_idx, scene_struct, metadata,
+    unique=False, include_zero=False, trivial_frac=0.1):
+  options = {}
+  if '_filter_options' not in scene_struct:
+    precompute_filter_options(scene_struct, metadata)
+
+  # TODO: Right now this is only looking for nontrivial combinations; in some
+  # cases I may want to add trivial combinations, either where the intersection
+  # is empty or where the intersection is equal to the filtering output.
+  trivial_options = {}
+  for relationship in scene_struct['relationships']:
+    print('relationship', relationship)
+    
+    # print(set(scene_struct['relationships'][relationship][object_idx]))
+    print('object_idx', object_idx)
+    print(scene_struct['relationships'][relationship])
+    print('hola')
+    for i in object_idx:
+      related = set(scene_struct['relationships'][relationship][i])
+      for filters, filtered in scene_struct['_filter_options'].items():
+        intersection = related & filtered
+        trivial = (intersection == filtered)
+        if unique and len(intersection) != 1: continue
+        if not include_zero and len(intersection) == 0: continue
+        if trivial:
+          trivial_options[(relationship, filters)] = sorted(list(intersection))
+        else:
+          options[(relationship, filters)] = sorted(list(intersection))
 
   N, f = len(options), trivial_frac
   num_trivial = int(round(N * f / (1 - f)))
@@ -242,6 +285,8 @@ def other_heuristic(text, param_vals):
 def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
                               synonyms, max_instances=None, verbose=False):
 
+  print('template', template)
+
   param_name_to_type = {p['name']: p['type'] for p in template['params']} 
 
   initial_state = {
@@ -257,7 +302,9 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
 
     # Check to make sure the current state is valid
     q = {'nodes': state['nodes']}
+    print('q',  q)
     outputs = qeng.answer_question(q, metadata, scene_struct, all_outputs=True)
+    print('outputs', outputs)
     answer = outputs[-1]
     if answer == '__INVALID__': continue
 
@@ -347,13 +394,22 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
     special_nodes = {
         'filter_unique', 'filter_count', 'filter_exist', 'filter',
         'relate_filter', 'relate_filter_unique', 'relate_filter_count',
-        'relate_filter_exist',
+        'relate_filter_exist', 'relate_filter_multiple',
     }
     if next_node['type'] in special_nodes:
-      if next_node['type'].startswith('relate_filter'):
+
+      if next_node['type'].startswith('relate_filter_multiple'):
         unique = (next_node['type'] == 'relate_filter_unique')
         include_zero = (next_node['type'] == 'relate_filter_count'
                         or next_node['type'] == 'relate_filter_exist')
+        filter_options = find_relate_filter_multiple_options(answer, scene_struct, metadata,
+                            unique=unique, include_zero=include_zero)
+
+      elif next_node['type'].startswith('relate_filter'):
+        unique = (next_node['type'] == 'relate_filter_unique')
+        include_zero = (next_node['type'] == 'relate_filter_count'
+                        or next_node['type'] == 'relate_filter_exist')
+        # print('answer', answer)
         filter_options = find_relate_filter_options(answer, scene_struct, metadata,
                             unique=unique, include_zero=include_zero)
       else:
@@ -382,7 +438,23 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
         cur_next_vals = {k: v for k, v in state['vals'].items()}
         next_input = state['input_map'][next_node['inputs'][0]]
         filter_side_inputs = next_node['side_inputs']
-        if next_node['type'].startswith('relate'):
+        
+        if next_node['type'].startswith('relate_filter_multiple'):
+          param_name = next_node['side_inputs'][0] # First one should be relate
+          filter_side_inputs = next_node['side_inputs'][1:]
+          param_type = param_name_to_type[param_name]
+          assert param_type == 'Relation'
+          param_val = k[0]
+          k = k[1]
+          new_nodes.append({
+            'type': 'multiple_relate',
+            'inputs': [next_input],
+            'side_inputs': [param_val],
+          })
+          cur_next_vals[param_name] = param_val
+          next_input = len(state['nodes']) + len(new_nodes) - 1
+        
+        elif next_node['type'].startswith('relate'):
           param_name = next_node['side_inputs'][0] # First one should be relate
           filter_side_inputs = next_node['side_inputs'][1:]
           param_type = param_name_to_type[param_name]
