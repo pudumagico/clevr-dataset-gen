@@ -174,10 +174,6 @@ def find_relate_filter_options(object_idx, scene_struct, metadata,
   trivial_options = {}
   for relationship in scene_struct['relationships']:
     
-    # print(set(scene_struct['relationships'][relationship][object_idx]))
-    print(object_idx)
-    print(scene_struct['relationships'][relationship])
-    print('hola')
     related = set(scene_struct['relationships'][relationship][object_idx])
     for filters, filtered in scene_struct['_filter_options'].items():
       intersection = related & filtered
@@ -209,12 +205,7 @@ def find_relate_filter_multiple_options(object_idx, scene_struct, metadata,
   # is empty or where the intersection is equal to the filtering output.
   trivial_options = {}
   for relationship in scene_struct['relationships']:
-    print('relationship', relationship)
     
-    # print(set(scene_struct['relationships'][relationship][object_idx]))
-    print('object_idx', object_idx)
-    print(scene_struct['relationships'][relationship])
-    print('hola')
     for i in object_idx:
       related = set(scene_struct['relationships'][relationship][i])
       for filters, filtered in scene_struct['_filter_options'].items():
@@ -285,8 +276,6 @@ def other_heuristic(text, param_vals):
 def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
                               synonyms, max_instances=None, verbose=False):
 
-  print('template', template)
-
   param_name_to_type = {p['name']: p['type'] for p in template['params']} 
 
   initial_state = {
@@ -302,15 +291,15 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
 
     # Check to make sure the current state is valid
     q = {'nodes': state['nodes']}
-    print('q',  q)
     outputs = qeng.answer_question(q, metadata, scene_struct, all_outputs=True)
-    print('outputs', outputs)
     answer = outputs[-1]
     if answer == '__INVALID__': continue
 
     # Check to make sure constraints are satisfied for the current state
     skip_state = False
+    print(template['constraints'])
     for constraint in template['constraints']:
+      print(constraint)
       if constraint['type'] == 'NEQ':
         p1, p2 = constraint['params']
         v1, v2 = state['vals'].get(p1), state['vals'].get(p2)
@@ -394,22 +383,14 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
     special_nodes = {
         'filter_unique', 'filter_count', 'filter_exist', 'filter',
         'relate_filter', 'relate_filter_unique', 'relate_filter_count',
-        'relate_filter_exist', 'relate_filter_multiple',
+        'relate_filter_exist',
     }
     if next_node['type'] in special_nodes:
 
-      if next_node['type'].startswith('relate_filter_multiple'):
+      if next_node['type'].startswith('relate_filter'):
         unique = (next_node['type'] == 'relate_filter_unique')
         include_zero = (next_node['type'] == 'relate_filter_count'
                         or next_node['type'] == 'relate_filter_exist')
-        filter_options = find_relate_filter_multiple_options(answer, scene_struct, metadata,
-                            unique=unique, include_zero=include_zero)
-
-      elif next_node['type'].startswith('relate_filter'):
-        unique = (next_node['type'] == 'relate_filter_unique')
-        include_zero = (next_node['type'] == 'relate_filter_count'
-                        or next_node['type'] == 'relate_filter_exist')
-        # print('answer', answer)
         filter_options = find_relate_filter_options(answer, scene_struct, metadata,
                             unique=unique, include_zero=include_zero)
       else:

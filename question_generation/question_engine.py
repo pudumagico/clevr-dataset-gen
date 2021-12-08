@@ -65,7 +65,7 @@ def relate_handler(scene_struct, inputs, side_inputs):
   relation = side_inputs[0]
   return scene_struct['relationships'][relation][inputs[0]]
     
-def multiple_relate_handler(scene_struct, inputs, side_inputs):
+def relate_multiple_handler(scene_struct, inputs, side_inputs):
   assert len(inputs) == 1
   assert len(side_inputs) == 1
   relation = side_inputs[0]
@@ -83,6 +83,13 @@ def intersect_handler(scene_struct, inputs, side_inputs):
   assert len(inputs) == 2
   assert len(side_inputs) == 0
   return sorted(list(set(inputs[0]) & set(inputs[1])))
+
+def not_handler(scene_struct, inputs, side_inputs):
+  assert len(inputs) == 2
+  assert len(side_inputs) == 0
+  if isinstance(inputs[1], int):
+        inputs[1] = [inputs[1]]
+  return sorted(list(set(inputs[0]) - set(inputs[1])))
 
 
 def count_handler(scene_struct, inputs, side_inputs):
@@ -164,9 +171,10 @@ execute_handlers = {
   'filter_objectcategory': make_filter_handler('objectcategory'),
   'unique': unique_handler,
   'relate': relate_handler,
-  'multiple_relate': multiple_relate_handler,
+  'relate_multiple': relate_multiple_handler,
   'union': union_handler,
   'intersect': intersect_handler,
+  'not': not_handler,
   'count': count_handler,
   'query_color': make_query_handler('color'),
   'query_shape': make_query_handler('shape'),
@@ -208,7 +216,6 @@ def answer_question(question, metadata, scene_struct, all_outputs=False,
       node_type = node['type']
       msg = 'Could not find handler for "%s"' % node_type
       assert node_type in execute_handlers, msg
-      print('node_type', node_type)
       handler = execute_handlers[node_type]
       node_inputs = [node_outputs[idx] for idx in node['inputs']]
       side_inputs = node.get('side_inputs', [])

@@ -19,7 +19,14 @@
     ],
     "Material": [
       "rubber", "metal"
+    ],
+    "Left": [
+      "left"
+    ],
+    "Right":[
+      "right"
     ]
+
   },
   "functions": [
     {
@@ -78,6 +85,12 @@
     },
     {
       "name": "intersect",
+      "inputs": ["ObjectSet", "ObjectSet"],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
+      "name": "not",
       "inputs": ["ObjectSet", "ObjectSet"],
       "output": "ObjectSet",
       "terminal": false
@@ -255,9 +268,9 @@
       "template_only": true
     },
     {
-      "name": "relate_filter_multiple",
+      "name": "relate_multiple",
       "inputs": ["ObjectSet"],
-      "side_inputs": ["Relation", "Size", "Color", "Material", "Shape"],
+      "side_inputs": ["Relation"],
       "output": "ObjectSet",
       "terminal": false,
       "template_only": true
