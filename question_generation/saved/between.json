@@ -1,0 +1,65 @@
+[
+  {
+    "params": [
+      {"type": "Size", "name": "<Z>"},
+      {"type": "Color", "name": "<C>"},
+      {"type": "Material", "name": "<M>"},
+      {"type": "Shape", "name": "<S>"},
+      {"type": "Right", "name": "<R>"},
+      {"type": "Size", "name": "<Z2>"},
+      {"type": "Color", "name": "<C2>"},
+      {"type": "Material", "name": "<M2>"},
+      {"type": "Shape", "name": "<S2>"},
+      {"type": "Left", "name": "<L>"}
+    ],
+    "text": [
+      "How many objects are <L> to the <Z2> <C2> <M2> <S2> and <R> to the <Z> <C> <M> <S>?"
+    ],
+    "nodes": [
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
+      {"type": "relate", "inputs": [1], "side_inputs": ["<R>"]},
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [3], "side_inputs": ["<Z2>", "<C2>", "<M2>", "<S2>"]},
+      {"type": "relate", "inputs": [4], "side_inputs": ["<L>"]},
+      {"type": "intersect", "inputs": [2,5]},
+      {"type": "count", "inputs": [6]}
+    ],
+    "constraints": [{"type": "OUT_NEQ", "params": ["<S>", "<S2>"]}]
+    
+  },
+  {
+    "params": [
+      {"type": "Size", "name": "<Z>"},
+      {"type": "Color", "name": "<C>"},
+      {"type": "Material", "name": "<M>"},
+      {"type": "Shape", "name": "<S>"},
+      {"type": "Right", "name": "<R>"},
+      {"type": "Size", "name": "<Z2>"},
+      {"type": "Color", "name": "<C2>"},
+      {"type": "Material", "name": "<M2>"},
+      {"type": "Shape", "name": "<S2>"},
+      {"type": "Left", "name": "<L>"}
+    ],
+    "text": [
+      "How many objects are not <L> to the <Z2> <C2> <M2> <S2> and <R> to the <Z> <C> <M> <S>?"
+    ],
+    "nodes": [
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
+      {"type": "relate", "inputs": [1], "side_inputs": ["<R>"]},
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [3], "side_inputs": ["<Z2>", "<C2>", "<M2>", "<S2>"]},
+      {"type": "relate", "inputs": [4], "side_inputs": ["<L>"]},
+      {"type": "intersect", "inputs": [2,5]},
+      {"type": "scene", "inputs": []},
+      {"type": "not", "inputs": [7,6]},
+      {"type": "not", "inputs": [8,1]},
+      {"type": "not", "inputs": [9,4]},
+      {"type": "count", "inputs": [10]}
+    ],
+    "constraints": [{"type": "OUT_NEQ", "params": ["<S>", "<S2>"]}]
+    
+  }
+  
+]
