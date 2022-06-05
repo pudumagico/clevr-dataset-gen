@@ -1,0 +1,175 @@
+[
+  {
+    "params": [
+      {"type": "Size", "name": "<Z>"},
+      {"type": "Color", "name": "<C>"},
+      {"type": "Material", "name": "<M>"},
+      {"type": "Shape", "name": "<S>"},
+      {"type": "Right", "name": "<R>"},
+      {"type": "Size", "name": "<Z2>"},
+      {"type": "Color", "name": "<C2>"},
+      {"type": "Material", "name": "<M2>"},
+      {"type": "Shape", "name": "<S2>"},
+      {"type": "Left", "name": "<L>"},
+      {"type": "Number", "name": "<N>"}
+    ],
+    "text": [
+      "There is a <Z2> <C2> <M2> <S2> [that is] <L> the <Z> <C> <M> <S>; Is the number of objects between them larger than <N>?"      
+    ],
+    "nodes": [
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
+      {
+        "side_inputs": [
+            "<L>",
+            "<Z2>",
+            "<C2>",
+            "<M2>",
+            "<S2>"
+        ],
+        "inputs": [
+            1
+        ],
+        "type": "relate_filter_unique"
+      },  
+      {"type": "relate", "inputs": [1], "side_inputs": ["<L>"]},
+      {"type": "relate", "inputs": [2], "side_inputs": ["<R>"]},
+      {"type": "intersect", "inputs": [3,4]},
+      {"type": "count", "inputs": [5]},
+      {"type": "scene_categorical", "inputs": [],"side_inputs": ["<N>"]},
+      {"type": "greater_than", "inputs": [6, 7]}
+    ],
+    "constraints": []
+    
+  },
+  {
+    "params": [
+      {"type": "Size", "name": "<Z>"},
+      {"type": "Color", "name": "<C>"},
+      {"type": "Material", "name": "<M>"},
+      {"type": "Shape", "name": "<S>"},
+      {"type": "Right", "name": "<R>"},
+      {"type": "Size", "name": "<Z2>"},
+      {"type": "Color", "name": "<C2>"},
+      {"type": "Material", "name": "<M2>"},
+      {"type": "Shape", "name": "<S2>"},
+      {"type": "Left", "name": "<L>"},
+      {"type": "Number", "name": "<N>"}
+    ],
+    "text": [
+      "There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; Is the number of objects between them larger than <N>?"
+    ],
+    "nodes": [
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
+      {
+        "side_inputs": [
+            "<R>",
+            "<Z2>",
+            "<C2>",
+            "<M2>",
+            "<S2>"
+        ],
+        "inputs": [
+            1
+        ],
+        "type": "relate_filter_unique"
+      },  
+      {"type": "relate", "inputs": [1], "side_inputs": ["<R>"]},
+      {"type": "relate", "inputs": [2], "side_inputs": ["<L>"]},
+      {"type": "intersect", "inputs": [3,4]},
+      {"type": "count", "inputs": [5]},
+      {"type": "scene_categorical", "inputs": [],"side_inputs": ["<N>"]},
+      {"type": "greater_than", "inputs": [6, 7]}
+    ],
+    "constraints": []
+    
+  },
+  {
+    "params": [
+      {"type": "Size", "name": "<Z>"},
+      {"type": "Color", "name": "<C>"},
+      {"type": "Material", "name": "<M>"},
+      {"type": "Shape", "name": "<S>"},
+      {"type": "Right", "name": "<R>"},
+      {"type": "Size", "name": "<Z2>"},
+      {"type": "Color", "name": "<C2>"},
+      {"type": "Material", "name": "<M2>"},
+      {"type": "Shape", "name": "<S2>"},
+      {"type": "Left", "name": "<L>"},
+      {"type": "Number", "name": "<N>"}
+    ],
+    "text": [
+      "There is a <Z2> <C2> <M2> <S2> [that is] <L> the <Z> <C> <M> <S>; Is the number of objects between them less than <N>?"      
+    ],
+    "nodes": [
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
+      {
+        "side_inputs": [
+            "<L>",
+            "<Z2>",
+            "<C2>",
+            "<M2>",
+            "<S2>"
+        ],
+        "inputs": [
+            1
+        ],
+        "type": "relate_filter_unique"
+      },  
+      {"type": "relate", "inputs": [1], "side_inputs": ["<L>"]},
+      {"type": "relate", "inputs": [2], "side_inputs": ["<R>"]},
+      {"type": "intersect", "inputs": [3,4]},
+      {"type": "count", "inputs": [5]},
+      {"type": "scene_categorical", "inputs": [],"side_inputs": ["<N>"]},
+      {"type": "less_than", "inputs": [6, 7]}
+    ],
+    "constraints": []
+    
+  },
+  {
+    "params": [
+      {"type": "Size", "name": "<Z>"},
+      {"type": "Color", "name": "<C>"},
+      {"type": "Material", "name": "<M>"},
+      {"type": "Shape", "name": "<S>"},
+      {"type": "Right", "name": "<R>"},
+      {"type": "Size", "name": "<Z2>"},
+      {"type": "Color", "name": "<C2>"},
+      {"type": "Material", "name": "<M2>"},
+      {"type": "Shape", "name": "<S2>"},
+      {"type": "Left", "name": "<L>"},
+      {"type": "Number", "name": "<N>"}
+    ],
+    "text": [
+      "There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; Is the number of objects between them less than <N>?"
+    ],
+    "nodes": [
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
+      {
+        "side_inputs": [
+            "<R>",
+            "<Z2>",
+            "<C2>",
+            "<M2>",
+            "<S2>"
+        ],
+        "inputs": [
+            1
+        ],
+        "type": "relate_filter_unique"
+      },  
+      {"type": "relate", "inputs": [1], "side_inputs": ["<R>"]},
+      {"type": "relate", "inputs": [2], "side_inputs": ["<L>"]},
+      {"type": "intersect", "inputs": [3,4]},
+      {"type": "count", "inputs": [5]},
+      {"type": "scene_categorical", "inputs": [],"side_inputs": ["<N>"]},
+      {"type": "less_than", "inputs": [6, 7]}
+    ],
+    "constraints": []
+    
+  }
+
+]

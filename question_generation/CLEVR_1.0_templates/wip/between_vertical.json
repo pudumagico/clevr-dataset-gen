@@ -1,0 +1,85 @@
+[
+  {
+    "params": [
+      {"type": "Size", "name": "<Z>"},
+      {"type": "Color", "name": "<C>"},
+      {"type": "Material", "name": "<M>"},
+      {"type": "Shape", "name": "<S>"},
+      {"type": "Size", "name": "<Z2>"},
+      {"type": "Color", "name": "<C2>"},
+      {"type": "Material", "name": "<M2>"},
+      {"type": "Shape", "name": "<S2>"},
+      {"type": "Front", "name": "<F>"},
+      {"type": "Behind", "name": "<B>"}
+    ],
+    "text": [
+      "There is a <Z2> <C2> <M2> <S2> [that is] <F> the <Z> <C> <M> <S>; How many objects are between them??"
+
+    ],
+    "nodes": [
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
+      {
+        "side_inputs": [
+            "<F>",
+            "<Z2>",
+            "<C2>",
+            "<M2>",
+            "<S2>"
+        ],
+        "inputs": [
+            1
+        ],
+        "type": "relate_filter_unique"
+      },  
+      {"type": "relate", "inputs": [1], "side_inputs": ["<F>"]},
+      {"type": "relate", "inputs": [2], "side_inputs": ["<B>"]},
+      {"type": "intersect", "inputs": [3,4]},
+      {"type": "count", "inputs": [5]}
+    ],
+    "constraints": []
+    
+  },
+  {
+    "params": [
+      {"type": "Size", "name": "<Z>"},
+      {"type": "Color", "name": "<C>"},
+      {"type": "Material", "name": "<M>"},
+      {"type": "Shape", "name": "<S>"},
+      {"type": "Size", "name": "<Z2>"},
+      {"type": "Color", "name": "<C2>"},
+      {"type": "Material", "name": "<M2>"},
+      {"type": "Shape", "name": "<S2>"},
+      {"type": "Front", "name": "<F>"},
+      {"type": "Behind", "name": "<B>"}
+    ],
+    "text": [
+      "There is a <Z2> <C2> <M2> <S2> [that is] <B> the <Z> <C> <M> <S>; How many objects are between them??"
+
+    ],
+    "nodes": [
+      {"type": "scene", "inputs": []},
+      {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
+      {
+        "side_inputs": [
+            "<B>",
+            "<Z2>",
+            "<C2>",
+            "<M2>",
+            "<S2>"
+        ],
+        "inputs": [
+            1
+        ],
+        "type": "relate_filter_unique"
+      },  
+      {"type": "relate", "inputs": [1], "side_inputs": ["<B>"]},
+      {"type": "relate", "inputs": [2], "side_inputs": ["<F>"]},
+      {"type": "intersect", "inputs": [3,4]},
+      {"type": "count", "inputs": [5]}
+    ],
+    "constraints": []
+    
+  }
+  
+]

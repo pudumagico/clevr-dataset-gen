@@ -25,6 +25,15 @@
     ],
     "Right":[
       "right"
+    ],
+    "Front":[
+      "front"
+    ],
+    "Behind":[
+      "behind"
+    ],
+    "Number":[
+      "1", "2", "3"
     ]
 
   },
@@ -274,6 +283,12 @@
       "output": "ObjectSet",
       "terminal": false,
       "template_only": true
+    },
+    {
+      "name": "between",
+      "inputs": ["ObjectSet"],
+      "output": "Integer",
+      "terminal": true
     }
   ]
 }

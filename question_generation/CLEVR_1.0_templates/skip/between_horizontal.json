@@ -13,19 +13,30 @@
       {"type": "Left", "name": "<L>"}
     ],
     "text": [
-      "How many objects are <L> to the <Z2> <C2> <M2> <S2> and <R> to the <Z> <C> <M> <S>?"
+      "There is a <Z2> <C2> <M2> <S2> [that is] <L> the <Z> <C> <M> <S>; How many objects are between them?"      
     ],
     "nodes": [
       {"type": "scene", "inputs": []},
       {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
-      {"type": "relate", "inputs": [1], "side_inputs": ["<R>"]},
-      {"type": "scene", "inputs": []},
-      {"type": "filter_unique", "inputs": [3], "side_inputs": ["<Z2>", "<C2>", "<M2>", "<S2>"]},
-      {"type": "relate", "inputs": [4], "side_inputs": ["<L>"]},
-      {"type": "intersect", "inputs": [2,5]},
-      {"type": "count", "inputs": [6]}
+      {
+        "side_inputs": [
+            "<L>",
+            "<Z2>",
+            "<C2>",
+            "<M2>",
+            "<S2>"
+        ],
+        "inputs": [
+            1
+        ],
+        "type": "relate_filter_unique"
+      },  
+      {"type": "relate", "inputs": [1], "side_inputs": ["<L>"]},
+      {"type": "relate", "inputs": [2], "side_inputs": ["<R>"]},
+      {"type": "intersect", "inputs": [3,4]},
+      {"type": "count", "inputs": [5]}
     ],
-    "constraints": [{"type": "OUT_NEQ", "params": ["<S>", "<S2>"]}]
+    "constraints": []
     
   },
   {
@@ -42,23 +53,31 @@
       {"type": "Left", "name": "<L>"}
     ],
     "text": [
-      "How many objects are not <L> to the <Z2> <C2> <M2> <S2> and <R> to the <Z> <C> <M> <S>?"
+      "There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; How many objects are between them??"
+
     ],
     "nodes": [
       {"type": "scene", "inputs": []},
       {"type": "filter_unique", "inputs": [0], "side_inputs": ["<Z>", "<C>", "<M>", "<S>"]},
+      {
+        "side_inputs": [
+            "<R>",
+            "<Z2>",
+            "<C2>",
+            "<M2>",
+            "<S2>"
+        ],
+        "inputs": [
+            1
+        ],
+        "type": "relate_filter_unique"
+      },  
       {"type": "relate", "inputs": [1], "side_inputs": ["<R>"]},
-      {"type": "scene", "inputs": []},
-      {"type": "filter_unique", "inputs": [3], "side_inputs": ["<Z2>", "<C2>", "<M2>", "<S2>"]},
-      {"type": "relate", "inputs": [4], "side_inputs": ["<L>"]},
-      {"type": "intersect", "inputs": [2,5]},
-      {"type": "scene", "inputs": []},
-      {"type": "not", "inputs": [7,6]},
-      {"type": "not", "inputs": [8,1]},
-      {"type": "not", "inputs": [9,4]},
-      {"type": "count", "inputs": [10]}
+      {"type": "relate", "inputs": [2], "side_inputs": ["<L>"]},
+      {"type": "intersect", "inputs": [3,4]},
+      {"type": "count", "inputs": [5]}
     ],
-    "constraints": [{"type": "OUT_NEQ", "params": ["<S>", "<S2>"]}]
+    "constraints": []
     
   }
   

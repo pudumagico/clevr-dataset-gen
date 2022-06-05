@@ -276,6 +276,8 @@ def other_heuristic(text, param_vals):
 def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
                               synonyms, max_instances=None, verbose=False):
 
+  print(len(scene_struct))
+
   param_name_to_type = {p['name']: p['type'] for p in template['params']} 
 
   initial_state = {
@@ -297,9 +299,7 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
 
     # Check to make sure constraints are satisfied for the current state
     skip_state = False
-    print(template['constraints'])
     for constraint in template['constraints']:
-      print(constraint)
       if constraint['type'] == 'NEQ':
         p1, p2 = constraint['params']
         v1, v2 = state['vals'].get(p1), state['vals'].get(p2)
@@ -439,8 +439,17 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
           param_name = next_node['side_inputs'][0] # First one should be relate
           filter_side_inputs = next_node['side_inputs'][1:]
           param_type = param_name_to_type[param_name]
-          assert param_type == 'Relation'
+          # assert param_type == 'Relation'
           param_val = k[0]
+          # print(param_type, param_val )
+          if param_type == 'Left':
+            param_val = 'left'
+          if param_type == 'Right':
+            param_val = 'right'
+          # if param_type == 'Front':
+          #   param_val = 'front'
+          # if param_type == 'Behind':
+          #   param_val = 'behind'
           k = k[1]
           new_nodes.append({
             'type': 'relate',

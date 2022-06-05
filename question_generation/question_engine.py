@@ -5,9 +5,10 @@
 # LICENSE file in the root directory of this source tree. An additional grant
 # of patent rights can be found in the PATENTS file in the same directory.
 
-import json, os, math
+import json, os, math, random
 from collections import defaultdict
 
+import numpy as np
 """
 Utilities for working with function program representations of questions.
 
@@ -24,7 +25,43 @@ in a JSON metadata file.
 
 def scene_handler(scene_struct, inputs, side_inputs):
   # Just return all objects in the scene
+  # print(scene_struct['objects'])
   return list(range(len(scene_struct['objects'])))
+
+def scene_categorical_handler(scene_struct, inputs, side_inputs):
+  # Return a random int between zero and the sum of objects in the scene
+  return int(side_inputs[0])
+  # return random.randint(len(scene_struct['objects']))
+
+def proper_between_handler(scene_struct, inputs, side_inputs):
+  # Return a random int between zero and the sum of objects in the scene
+  obj1_px = np.array(scene_struct['objects'][inputs[0]]['pixel_coords'])
+  obj2_px = np.array(scene_struct['objects'][inputs[1]]['pixel_coords'])
+  between_objs = 0
+
+  distance = math.sqrt((obj1_px[0] - obj2_px[0])**2 + (obj1_px[1] - obj2_px[1])**2 + (obj1_px[2] - obj2_px[2])**2)
+  d = (obj1_px - obj2_px) / distance
+  
+  dist = 50 #in pixels
+
+  for i in range(len(scene_struct['objects'])):
+    if i in inputs:
+      pass
+    else:
+      v = np.array(scene_struct['objects'][i]['pixel_coords']) - obj2_px
+      t = v.dot(d) 
+      P = obj2_px + t * d
+      x = math.sqrt((P[0] - v[0])**2 + (P[1] - v[1])**2 + (P[2] - v[2])**2)
+      
+      if x < dist:
+        between_objs += 1
+  #entonces aca creo esta linea en 3d, le agrego un grosor y veo todos los otros objetos q
+  #caen en el radio y los cuento
+  return between_objs
+
+  # print(inputs)
+
+  # return random.randint(len(scene_struct['objects']))
 
 
 def make_filter_handler(attribute):
@@ -164,6 +201,7 @@ def greater_than_handler(scene_struct, inputs, side_inputs):
 # for different sets of node types?
 execute_handlers = {
   'scene': scene_handler,
+  'scene_categorical': scene_categorical_handler,
   'filter_color': make_filter_handler('color'),
   'filter_shape': make_filter_handler('shape'),
   'filter_material': make_filter_handler('material'),
@@ -193,6 +231,7 @@ execute_handlers = {
   'same_shape': make_same_attr_handler('shape'),
   'same_size': make_same_attr_handler('size'),
   'same_material': make_same_attr_handler('material'),
+  'between': proper_between_handler,
 }
 
 
