@@ -276,7 +276,6 @@ def other_heuristic(text, param_vals):
 def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
                               synonyms, max_instances=None, verbose=False):
 
-  print(len(scene_struct))
 
   param_name_to_type = {p['name']: p['type'] for p in template['params']} 
 
@@ -369,6 +368,14 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
           continue
 
       answer_counts[answer] += 1
+
+      # if answer == True:
+      #   answer = "yes"
+      # elif answer == False:
+      #   answer = "no"
+
+      answer = str(answer)
+
       state['answer'] = answer
       final_states.append(state)
       if max_instances is not None and len(final_states) == max_instances:
